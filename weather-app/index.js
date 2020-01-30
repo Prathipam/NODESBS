@@ -1,17 +1,25 @@
 const request = require('request')
 const geoCode = require('./utils/geocode.js')
 const weather = require('./utils/weather.js')
-
-geoCode('Singapore',(error,response) => {
-    if(error){
-        console.log(error)
-    }else { 
-        weather(response.long,response.lat,(error,response) => {
-            console.log(error)
-            console.log(response)
+const address = process.argv[2]
+if(address){   
+    geoCode(address,(error,data) => {
+        if(error){
+        return console.log(error)
+        } 
+            
+        weather(data.long,data.lat,(error,foreCast) => {
+            if(error)
+                return console.log(error)
+            console.log(data.location)
+            console.log(foreCast)
         })
-    }
-})
+        
+    })
+}
+else{
+    console.log('Please enter the city name')
+}
 
 // Separate function created using callback abstraction
 
