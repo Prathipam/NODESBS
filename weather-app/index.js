@@ -3,16 +3,16 @@ const geoCode = require('./utils/geocode.js')
 const weather = require('./utils/weather.js')
 const address = process.argv[2]
 if(address){   
-    geoCode(address,(error,data) => {
+    geoCode(address,(error,{long,lat,location}) => {
         if(error){
         return console.log(error)
         } 
             
-        weather(data.long,data.lat,(error,foreCast) => {
+        weather(long,lat,(error,{summary,temperature,precipitation}) => {
             if(error)
                 return console.log(error)
-            console.log(data.location)
-            console.log(foreCast)
+            console.log(location)
+            console.log(summary,temperature,precipitation)
         })
         
     })
