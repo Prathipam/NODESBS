@@ -2,6 +2,11 @@ const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
 const app = express()
+
+//Import geocode and weather
+const geoCode = require('./utils/geocode.js')
+const weather = require('./utils/weather.js')
+
 // below the express server creation, create the path for the public folder
 const publicPathDir = path.join(__dirname,'../public')
 const viewsPathDir = path.join(__dirname,'../templates/views')
@@ -41,8 +46,30 @@ app.get('/help',(req,res) => {
 })  
 
 app.get('/weather',(req,res) => {
-    res.send({forcast:"50 degress",
-    location:"Singapore"
+    if(!req.query.address){
+        return res.send({
+            error:"Please enter the address"
+        })
+    }
+    // Default object for object destructured can be done using {long,lat,location} = {}
+    geoCode(req.query.address,(error,{long,lat,location} = {}) => {
+        if(error){
+        return res.send({error})
+        } 
+            
+        weather(long,lat,(error,{summary,temperature,precipitation} = {}) => {
+            if(error)
+                return res.send({error})
+            res.send({
+                temperature,
+                summary,
+                precipitation,
+                location,
+                address:req.query.address
+            })
+            
+        })
+        
     })
 })
 
