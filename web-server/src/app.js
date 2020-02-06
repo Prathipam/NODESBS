@@ -7,6 +7,9 @@ const app = express()
 const geoCode = require('./utils/geocode.js')
 const weather = require('./utils/weather.js')
 
+//PORT from environment
+const PORT = process.env.PORT || 3000
+
 // below the express server creation, create the path for the public folder
 const publicPathDir = path.join(__dirname,'../public')
 const viewsPathDir = path.join(__dirname,'../templates/views')
@@ -89,6 +92,6 @@ app.get('*',(req,res)=>{
     })
 })
 
-app.listen(3000,() => {
-    console.log("Port is up and running 3000")
+app.listen(PORT,() => {
+    console.log("Port is up and running "+ PORT)
 })
